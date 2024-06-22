@@ -13,7 +13,7 @@ pipeline {
             steps {
                 script {
                     docker.image('flask-app').inside {
-                        sh 'echo "No tests available."'
+                         sh 'pytest'
                     }
                 }
             }
