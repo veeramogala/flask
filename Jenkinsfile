@@ -1,29 +1,29 @@
 pipeline {
     agent any
-    
+
     stages {
         stage('Build') {
             steps {
                 script {
-                    docker.build('flask-app')
+                    def app = docker.build("flask-app")
                 }
             }
         }
-        
         stage('Test') {
             steps {
                 script {
-                    echo "tested" {
+                    docker.image('flask-app').inside {
+                        sh 'echo "No tests available."'
                     }
                 }
             }
         }
-        
         stage('Deploy') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.example.com', 'credentials-id') {
-                        docker.image('flask-app').push('latest')
+                    withKubeConfig([credentialsId: 'kubeconfig']) {
+                        sh 'kubectl apply -f k8s/deployment.yaml'
+                        sh 'kubectl apply -f k8s/service.yaml'
                     }
                 }
             }
