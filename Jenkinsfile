@@ -12,7 +12,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    docker.image('flask-app').inside {
+                    docker.image('flask-app').inside('-v /var/lib/jenkins/workspace/mini-project:/var/lib/jenkins/workspace/mini-project:rw') {
                          sh 'pytest'
                     }
                 }
